@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Model Selection</title>
+</head>
+<body>
+    <div style="display: inline-block; *display: inline; vertical-align: top;">
+        <div style="width: 300px; height: 400px; overflow-y: scroll; border-style: groove;">
+            <h2> Selected Features </h2>
+                {% for i in features %}
+                    {{ i }}<br>
+                {% endfor %}
+        </div>
+
+        <div style=" width: 300px; border-style: groove;">
+            <h2> Selected Label </h2>
+                {{ label }}<br>
+        </div>
+    </div>
+
+    <div style="display: inline-block; *display: inline; vertical-align: top;">
+        <div style="width: 1000px; height: 500px; overflow-y: scroll; border-style: groove;">
+            <form  method="post" enctype="multipart/form-data" action="hyperParam">
+            {% csrf_token %}
+                <h2>  Model Selection </h2>
+                <ul>
+                    <li>Classification {% if regression == 0 %} <strong>(Recommanded)</strong> {% endif %}</li>
+                        <input type="radio" name="model" value="Linear_Classifiers_Logistic_Regression">Linear Classifiers: Logistic Regression<br>
+                        <input type="radio" name="model" value="Linear_Classifiers_Naive_Bayes_Classifier">Linear Classifiers: Naive Bayes Classifier<br>
+                        <input type="radio" name="model" value="Nearest_Neighbor">Nearest Neighbor<br>
+                        <input type="radio" name="model" value="Support_Vector_Machines">Support Vector Machines<br>
+                        <input type="radio" name="model" value="Decision_Trees">Decision Trees<br>
+                        <input type="radio" name="model" value="Random_Forest">Random Forest<br>
+                    <li>Regression {% if regression != 0 %} <strong>(Recommanded)</strong> {% endif %}</li>
+                        <input type="radio" name="model" value="Simple_Linear_Regression">Simple Linear Regression<br>
+<!--                        <input type="radio" name="model" value="Polynomial_Regression">Polynomial Regression<br>-->
+                        <input type="radio" name="model" value="Support_Vector_Regression">Support Vector Regression<br>
+                        <input type="radio" name="model" value="Decision_Tree_Regression">Decision Tree Regression<br>
+                        <input type="radio" name="model" value="Random_Forest_Regression">Random Forest Regression<br>
+                </ul>
+                <input type="hidden" name="features" value="{{ features }}">
+                <input type="hidden" name="label" value="{{ label }}">
+                <input type="hidden" name="filename" value="{{ filename }}">
+                <button type="submit">DONE</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

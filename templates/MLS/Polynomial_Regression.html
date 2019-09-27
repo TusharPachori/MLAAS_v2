@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Polynomial Regression</title>
+</head>
+<body>
+    <div style="display: inline-block; *display: inline; vertical-align: top;">
+        <div style="width: 300px; height: 400px; overflow-y: scroll; border-style: groove;">
+            <h2> Selected Features </h2>
+                {% for i in features %}
+                    {{ i }}<br>
+                {% endfor %}
+        </div>
+
+        <div style=" width: 300px; border-style: groove;">
+            <h2> Selected Label </h2>
+                {{ label }}<br>
+        </div>
+    </div>
+
+    <div style="display: inline-block; *display: inline; vertical-align: top;">
+        <div style="width: 1000px; height: 500px; overflow-y: scroll; border-style: groove;">
+            <form  method="post" enctype="multipart/form-data" action="{{ model }}">
+            {% csrf_token %}
+                <h2>  SELECTED MODEL: {{ model }} </h2>
+                <div style="display: inline-block; *display: inline; vertical-align: top;">
+                    <table>
+                        <tr>
+                            <td> <strong> HYPER-PARAMETERS &nbsp;&nbsp;&nbsp;</strong> </td>
+                            <td> <strong> VALUES &nbsp;&nbsp;&nbsp;</strong> </td>
+                        </tr>
+                        <tr>
+                            <td>degree</td>
+                            <td>
+                                <input type="number" name="degree" min="1" max="10" step="1" value="2">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>interaction_only</td>
+                            <td>
+                                <select name="interaction_only">
+                                    <option value="True" >True</option>
+                                    <option value="False" selected>False</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>include_bias</td>
+                            <td>
+                                <select name="include_bias">
+                                    <option value="True" selected>True</option>
+                                    <option value="False" >False</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>order</td>
+                            <td>
+                                <select name="order">
+                                    <option value="C" selected>C</option>
+                                    <option value="F" >F</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="display: inline-block; *display: inline; vertical-align: top;">
+                    <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        TRAIN/TEST RATIO :: <input type="text" name="ratio" value="20">%</h4>
+                </div>
+                <input type="hidden" name="features" value="{{ features }}">
+                <input type="hidden" name="label" value="{{ label }}">
+                <input type="hidden" name="filename" value="{{ filename }}">
+                <button type="submit">DONE</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{% load app_tags %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Dataset</title>
+</head>
+<body>
+    <h2> FEATURE SELECTION </h2>
+    <form  method="post" enctype="multipart/form-data" action="modelSelection">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td> &nbsp;&nbsp;&nbsp;</td>
+                <td> Columns &nbsp;&nbsp;&nbsp;</td>
+                <td> Correlation with {{ label }} &nbsp;&nbsp;&nbsp;</td>
+                <td> Comments &nbsp;&nbsp;&nbsp;</td>
+            </tr>
+            {% for row in columns|entry_num_array %}
+            <tr>
+                {% if  columns|index:row  != label  %}
+                    <td><input type="checkbox" name="features" value="{{ columns|index:row }}"></td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+                <td>{{ columns|index:row }}</td>
+                <td>{{ corr|index:row }}</td>
+                {% if comment|index:row == 5%}
+                    <td> Highly Correlated</td>
+                {% elif comment|index:row == 4%}
+                    <td> Correlated</td>
+                {% elif comment|index:row == 3%}
+                    <td> Slightly Correlated</td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </table>
+        <input type="hidden" name="label" value="{{ label }}">
+        <input type="hidden" name="filename" value="{{ filename }}">
+        <button type="submit">DONE</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dataset</title>
+</head>
+<body>
+    <h2> PREPROCESSING </h2>
+    <h2> Entries: {{entries}}</h2>
+    <h4> DataSet Size: {{size}}</h4>
+
+
+    <form  method="post" enctype="multipart/form-data" action="preprocess">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <th> COLUMNS &nbsp;&nbsp;&nbsp;</th>
+                <th> DATATYPE &nbsp;&nbsp;&nbsp;</th>
+                <th> PREPROCESS REQ &nbsp;&nbsp;&nbsp;</th>
+                <th> COMMENTS &nbsp;&nbsp;&nbsp;</th>
+            </tr>
+            {% for i in column %}
+            <tr>
+                <td>&nbsp;&nbsp;&nbsp;{{i.0}} &nbsp;&nbsp;&nbsp;</td>&nbsp;
+                <td>&nbsp;&nbsp;&nbsp;{{i.3}}&nbsp;&nbsp;&nbsp;</td>
+                <td>&nbsp;&nbsp;&nbsp;{% if i.4 == 1 or i.3 == 'object' %} YES {% else %} NO {% endif %}&nbsp;&nbsp;&nbsp;</td>
+                <td>&nbsp;&nbsp;&nbsp;{% if i.4 == 1 and i.3 == 'object' %} Contains Nan values/Contains String Values
+                    {% elif i.4 == 1 %} Contains Nan values {% elif i.3 == 'object' %} Contains String Values {% endif %}&nbsp;&nbsp;&nbsp;</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <input type="hidden" name="filename" value="{{ filename }}">
+        <button type="submit">PREPROCESS</button>
+    </form>
+</body>
+</html>

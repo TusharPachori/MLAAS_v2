@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  Hi {{ user.username }}!
+  <p><a href="{% url 'logout' %}">logout</a></p>
+  <p><a href="{% url 'password_reset' %}">reset password</a></p>
+  <form method="post" action="{% url 'index' %}">
+      {% csrf_token %}
+    <h1><input type="submit" value="Use Automated Machine Learning Service" /></h1>
+</form>
+{% else %}
+<p><h1>MLaaS</h1></p>
+  <a href="{% url 'login' %}">login</a>
+<p>New User <a href="{% url 'signup' %}">SignUp</a></p>
+
+
+{% endif %}
+{% endblock %}

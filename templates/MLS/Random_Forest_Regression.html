@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Random Forest</title>
+</head>
+<body>
+    <div style="display: inline-block; *display: inline; vertical-align: top;">
+        <div style="width: 300px; height: 400px; overflow-y: scroll; border-style: groove;">
+            <h2> Selected Features </h2>
+                {% for i in features %}
+                    {{ i }}<br>
+                {% endfor %}
+        </div>
+
+        <div style=" width: 300px; border-style: groove;">
+            <h2> Selected Label </h2>
+                {{ label }}<br>
+        </div>
+    </div>
+
+    <div style="display: inline-block; *display: inline; vertical-align: top;">
+        <div style="width: 1000px; height: 500px; overflow-y: scroll; border-style: groove;">
+            <form  method="post" enctype="multipart/form-data" action="{{ model }}">
+            {% csrf_token %}
+                <h2>  SELECTED MODEL: {{ model }} </h2>
+                <div style="display: inline-block; *display: inline; vertical-align: top;">
+                    <table>
+                        <tr>
+                            <td> <strong> HYPER-PARAMETERS &nbsp;&nbsp;&nbsp;</strong> </td>
+                            <td> <strong> VALUES &nbsp;&nbsp;&nbsp;</strong> </td>
+                        </tr>
+                        <tr>
+                            <td>n_estimators</td>
+                            <td>
+                                <input type="number" name="n_estimators" min="10" max="100" step="10" value="10">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>criterion</td>
+                            <td>
+                                <select name="criterion">
+                                    <option value="mse" selected>mse</option>
+                                    <option value="mae">mae</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>max_depth</td>
+                            <td>
+                                <input type="radio" name="max_depth" value="None" checked>None
+                                <br>
+                                <input type="radio" name="max_depth" value="value"><input type="number" name="max_depth_value" min="1" max="100" step="1" value="1">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>min_samples_split</td>
+                            <td>
+                                <input type="number" name="min_samples_split" min="2" max="100" step="1" value="2">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>min_samples_leaf</td>
+                            <td>
+                                <input type="number" name="min_samples_leaf" min="1" max="100" step="1" value="1">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>min_weight_fraction_leaf</td>
+                            <td>
+                                <input type="number" name="min_weight_fraction_leaf" min="0" max="1" step="0.1" value="0.0">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>max_features</td>
+                            <td>
+                                <select name="max_features">
+                                    <option value="auto" selected>auto</option>
+                                    <option value="sqrt">sqrt</option>
+                                    <option value="log2">log2</option>
+                                    <option value="Int">Integer</option>
+                                </select>&nbsp;&nbsp;&nbsp;<input type="number" name="max_features_integer" min="1" max="10" step="1" value="1">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>max_leaf_nodes</td>
+                            <td>
+                                <input type="radio" name="max_leaf_nodes" value="None" checked>None
+                                <br>
+                                <input type="radio" name="max_leaf_nodes" value="value"><input type="number" name="max_leaf_nodes_value" min="1" max="100" step="1" value="1">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>min_impurity_decrease</td>
+                            <td>
+                                <input type="number" name="min_impurity_decrease" min="0.0" max="1.0" step="0.1" value="0.0">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>min_impurity_split</td>
+                            <td>
+                                <input type="text" name="min_impurity_split" value="1e-7" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>bootstrap</td>
+                            <td>
+                                <select name="bootstrap">
+                                    <option value="True" selected>True</option>
+                                    <option value="False" >False</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>oob_score</td>
+                            <td>
+                                <select name="oob_score">
+                                    <option value="True" >True</option>
+                                    <option value="False" selected>False</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>n_jobs</td>
+                            <td>
+                                <input type="radio" name="n_jobs" value="None" checked>None<br>
+                                <input type="radio" name="n_jobs" value="value"><input type="number" name="n_jobs_value" min="1" max="100" step="1" value="1">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>random_state</td>
+                            <td>
+                                <input type="radio" name="random_state" value="None" checked>None<br>
+                                <input type="radio" name="random_state" value="value"><input type="number" name="random_state_value" min="1" max="100" step="1" value="1">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>verbose</td>
+                            <td>
+                                <input type="number" name="verbose" min="0" max="10" step="1" value="0">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>warm_start</td>
+                            <td>
+                                <select name="warm_start">
+                                    <option value="True" >True</option>
+                                    <option value="False" selected>False</option>
+                                </select>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+                <div style="display: inline-block; *display: inline; vertical-align: top;">
+                    <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        TRAIN/TEST RATIO :: <input type="text" name="ratio" value="20">%</h4>
+                </div>
+                <input type="hidden" name="features" value="{{ features }}">
+                <input type="hidden" name="label" value="{{ label }}">
+                <input type="hidden" name="filename" value="{{ filename }}">
+                <button type="submit">DONE</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

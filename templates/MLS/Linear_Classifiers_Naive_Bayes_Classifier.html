@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Naive Bayes</title>
+</head>
+<body>
+    <div style="display: inline-block; *display: inline; vertical-align: top;">
+        <div style="width: 300px; height: 400px; overflow-y: scroll; border-style: groove;">
+            <h2> Selected Features </h2>
+                {% for i in features %}
+                    {{ i }}<br>
+                {% endfor %}
+        </div>
+
+        <div style=" width: 300px; border-style: groove;">
+            <h2> Selected Label </h2>
+                {{ label }}<br>
+        </div>
+    </div>
+
+    <div style="display: inline-block; *display: inline; vertical-align: top;">
+        <div style="width: 1000px; height: 500px; overflow-y: scroll; border-style: groove;">
+            <form  method="post" enctype="multipart/form-data" action="{{ model }}">
+            {% csrf_token %}
+                <h2>  SELECTED MODEL: {{ model }} </h2>
+                <div style="display: inline-block; *display: inline; vertical-align: top;">
+                    <table>
+                        <tr>
+                            <td> <strong> HYPER-PARAMETERS &nbsp;&nbsp;&nbsp;</strong> </td>
+                            <td> <strong> VALUES &nbsp;&nbsp;&nbsp;</strong> </td>
+                        </tr>
+                        <tr>
+                            <td>priors</td>
+                            <td><input type="text" name="priors" value="None" readonly></td>
+<!--                                <table>-->
+<!--                                    <tr>-->
+<!--                                        <td>Feature</td>-->
+<!--                                        <td>Probability</td>-->
+<!--                                    </tr>-->
+<!--                                    {% for i in features %}-->
+<!--                                    <tr>-->
+<!--                                        <td>{{ i }} &nbsp;&nbsp;&nbsp; </td>-->
+<!--                                        <td> 0 <input type="range" name="priors" min="0" max="1", step="0.1" value="1"> 1 </td>-->
+<!--                                    </tr>-->
+<!--                                    {% endfor %}-->
+<!--                                </table>-->
+                        </tr>
+                        <tr></tr>
+                        <tr>
+                            <td> var_smoothing </td>
+                            <td> <input type="text" name="var_smoothing" value="1e-9"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="display: inline-block; *display: inline; vertical-align: top;">
+                    <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        TRAIN/TEST RATIO :: <input type="text" name="ratio" value="20">%</h4>
+                </div>
+                <input type="hidden" name="features" value="{{ features }}">
+                <input type="hidden" name="label" value="{{ label }}">
+                <input type="hidden" name="filename" value="{{ filename }}">
+                <button type="submit">DONE</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

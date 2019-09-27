@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nearest Neighbour</title>
+</head>
+<body>
+    <div style="display: inline-block; *display: inline; vertical-align: top;">
+        <div style="width: 300px; height: 400px; overflow-y: scroll; border-style: groove;">
+            <h2> Selected Features </h2>
+                {% for i in features %}
+                    {{ i }}<br>
+                {% endfor %}
+        </div>
+
+        <div style=" width: 300px; border-style: groove;">
+            <h2> Selected Label </h2>
+                {{ label }}<br>
+        </div>
+    </div>
+
+    <div style="display: inline-block; *display: inline; vertical-align: top;">
+        <div style="width: 1000px; height: 500px; overflow-y: scroll; border-style: groove;">
+            <form  method="post" enctype="multipart/form-data" action="{{ model }}">
+            {% csrf_token %}
+                <h2>  SELECTED MODEL: {{ model }} </h2>
+                <div style="display: inline-block; *display: inline; vertical-align: top;">
+                    <table>
+                        <tr>
+                            <td> <strong> HYPER-PARAMETERS &nbsp;&nbsp;&nbsp;</strong> </td>
+                            <td> <strong> VALUES &nbsp;&nbsp;&nbsp;</strong> </td>
+                        </tr>
+                        <tr>
+                            <td>n_neighbors</td>
+                            <td>
+                                <input type="number" name="n_neighbors" min="1" max="100" step="1" value="5">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>weights</td>
+                            <td>
+                                <select name="weights">
+                                    <option value="uniform" selected>uniform</option>
+                                    <option value="distance">distance</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>algorithm</td>
+                            <td>
+                                <select name="algorithm">
+                                    <option value="auto" selected>auto</option>
+                                    <option value="ball_tree">ball_tree</option>
+                                    <option value="kd_tree">kd_tree</option>
+                                    <option value="brute">brute</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>leaf_size</td>
+                            <td>
+                                <input type="number" name="leaf_size" min="1" max="100" step="1" value="30">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>p</td>
+                            <td>
+                                <input type="number" name="p" min="1" max="10" step="1" value="2">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>metric</td>
+                            <td>
+                                <select name="metric">
+                                    <option value="minkowski" selected>minkowski</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>metric_params</td>
+                            <td>
+                                <input type="text" name="metric_params" value="None" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>n_jobs</td>
+                            <td>
+                                <input type="radio" name="n_jobs" value="None" checked>None<br>
+                                <input type="radio" name="n_jobs" value="value"><input type="number" name="n_jobs_value" min="1" max="100" step="1" value="1">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="display: inline-block; *display: inline; vertical-align: top;">
+                    <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        TRAIN/TEST RATIO :: <input type="text" name="ratio" value="20">%</h4>
+                </div>
+                <input type="hidden" name="features" value="{{ features }}">
+                <input type="hidden" name="label" value="{{ label }}">
+                <input type="hidden" name="filename" value="{{ filename }}">
+                <button type="submit">DONE</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

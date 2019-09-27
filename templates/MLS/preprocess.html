@@ -1,0 +1,39 @@
+{% load app_tags %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Dataset</title>
+</head>
+<body>
+    <h2> SELECT LABEL</h2>
+
+    <form  method="post" enctype="multipart/form-data" action="correlation">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <th>
+                    <td> Selection &nbsp;&nbsp;&nbsp;</td>
+                    {% for i in columns %}
+                        <td>{{ i.0 }} &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</td>
+                    {% endfor %}
+                </th>
+            </tr>
+            {% for counter in matrix|entry_num_array %}
+            <tr>
+                <td><input type="radio" name="label" value="{{ columns|fir_index:counter}}" required></td>
+                <td>{{ columns|fir_index:counter}}</td>
+                {% for i in matrix|index:counter %}
+                {% if i >= 0.0 %}
+                <td bgcolor="rgb(255,({{i}}+1)*100,{{i}}*100)"><strong>{{i}}</strong></td>
+                {% else %}
+                <td bgcolor="rgb(1,1,1)">{{i}}</td>
+                {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+        <input type="hidden" name="filename" value="{{ filename }}">
+        <button type="submit">DONE</button>
+    </form>
+</body>
+</html>

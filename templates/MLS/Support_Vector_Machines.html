@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SVM</title>
+</head>
+<body>
+    <div style="display: inline-block; *display: inline; vertical-align: top;">
+        <div style="width: 300px; height: 400px; overflow-y: scroll; border-style: groove;">
+            <h2> Selected Features </h2>
+                {% for i in features %}
+                    {{ i }}<br>
+                {% endfor %}
+        </div>
+
+        <div style=" width: 300px; border-style: groove;">
+            <h2> Selected Label </h2>
+                {{ label }}<br>
+        </div>
+    </div>
+
+    <div style="display: inline-block; *display: inline; vertical-align: top;">
+        <div style="width: 1000px; height: 500px; overflow-y: scroll; border-style: groove;">
+            <form  method="post" enctype="multipart/form-data" action="{{ model }}">
+            {% csrf_token %}
+                <h2>  SELECTED MODEL: {{ model }} </h2>
+                <div style="display: inline-block; *display: inline; vertical-align: top;">
+                    <table>
+                        <tr>
+                            <td> <strong> HYPER-PARAMETERS &nbsp;&nbsp;&nbsp;</strong> </td>
+                            <td> <strong> VALUES &nbsp;&nbsp;&nbsp;</strong> </td>
+                        </tr>
+                        <tr>
+                            <td>kernel</td>
+                            <td>
+                                <select name="kernel">
+                                    <option value="linear">linear</option>
+                                    <option value="poly">poly</option>
+                                    <option value="rbf" selected>rbf</option>
+                                    <option value="sigmoid">sigmoid</option>
+                                    <option value="precomputed">precomputed</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>degree</td>
+                            <td>
+                                <input type="number" name="degree" min="1" max="5" value="3">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>gamma</td>
+                            <td>
+                                <input type="text" name="gamma" value="auto" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>coef0</td>
+                            <td>
+                                <input type="number" name="coef0" min="0.0" max="1.0" step="0.1" value="0.0">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>tol</td>
+                            <td>
+                                <input type="text" name="tol" value="1e-3" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>C</td>
+                            <td>
+                                <input type="number" name="C" min="0.0" max="1.0" step="0.1" value="1.0">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>shrinking</td>
+                            <td>
+                                <select name="shrinking">
+                                    <option value="True" selected>True</option>
+                                    <option value="False">False</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>probability</td>
+                            <td>
+                                <select name="probability">
+                                    <option value="True" >True</option>
+                                    <option value="False" selected>False</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>cache_size</td>
+                            <td>
+                                <input type="number" name="cache_size" min="100" max="1000" step="50" value="200">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>class_weight</td>
+                            <td><input type="text" name="class_weight" value="None" readonly></td>
+                        </tr>
+                        <tr>
+                            <td>verbose</td>
+                            <td>
+                                <select name="verbose">
+                                    <option value="True">True</option>
+                                    <option value="False" selected>False</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>max_iter</td>
+                            <td>
+                                <input type="number" name="max_iter"  value="-1" readonly>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>decision_function_shape</td>
+                            <td>
+                                <select name="decision_function_shape">
+                                    <option value="ovr" selected>ovr</option>
+                                    <option value="ovo">ovo</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>random_state</td>
+                            <td><input type="text" name="random_state" value="None" readonly></td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="display: inline-block; *display: inline; vertical-align: top;">
+                    <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        TRAIN/TEST RATIO :: <input type="text" name="ratio" value="20">%</h4>
+                </div>
+                <input type="hidden" name="features" value="{{ features }}">
+                <input type="hidden" name="label" value="{{ label }}">
+                <input type="hidden" name="filename" value="{{ filename }}">
+                <button type="submit">DONE</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
