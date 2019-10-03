@@ -7,6 +7,6 @@
 <body>
 
 <h1>MODEL: {{ model }}</h1>
-<h1>{{ metrics }}: {{ result }}</h1>
+<h1>{% if result %}{{ metrics }}: {{ result }} {% else %} Error: {{ Error }}{% endif %}</h1>
 </body>
 </html>

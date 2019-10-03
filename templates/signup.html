@@ -1,12 +1,26 @@
 {% extends 'base.html' %}
 
 {% block title %}Sign Up{% endblock %}
+{% block heading %} SignUp {% endblock %}
 
 {% block content %}
-  <h2>Sign up</h2>
-  <form method="post">
+<form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+  {{ form.non_field_errors }}
+    <div class="fieldWrapper">
+        {{ form.username.errors }}
+        UserName {{ form.username }}
+    </div>
+    <div class="fieldWrapper">
+        {{ form.password1.errors }}
+        Password {{ form.password1 }}
+    </div>
+  <div class="fieldWrapper">
+        {{ form.password2.errors }}
+        Confirm Password {{ form.password2 }}
+    </div>
     <button type="submit">Sign up</button>
   </form>
+  <a href="{% url 'login' %}"> Already a User </a>
+
 {% endblock %}

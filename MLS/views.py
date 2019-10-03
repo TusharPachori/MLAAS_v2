@@ -125,7 +125,7 @@ def modelSelection(request):
         df = pd.read_csv(my_file)
         u_values = df[label].unique()
         values = df.shape[0]
-        if len(u_values)/values >=0.2:
+        if len(u_values)/values >=0.05:
             regression=1
         else:
             regression=0

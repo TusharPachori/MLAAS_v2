@@ -4,10 +4,10 @@
 {% block content %}
 <h1>USER: {{ user.username }}</h1>
 <h1>MLaaS</h1>
-    <h2>UPLOAD DATASET</h2>
+    <h3>UPLOAD DATASET</h3>
     <form method="post" enctype="multipart/form-data" action="dataset">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form.Dataset }}
         <button type="submit">Upload</button>
     </form>
 {% endblock %}

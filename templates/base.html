@@ -1,13 +1,36 @@
-<!DOCTYPE html>
-<html>
+
+{% load static %}
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>{% block title %}Django Auth Tutorial{% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}{% endblock %}</title>
+
+    <!-- Font Icon -->
+    <link rel="stylesheet" href="{% static '/fonts/material-icon/css/material-design-iconic-font.min.css' %}">
+
+    <!-- Main css -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-  <main>
-    {% block content %}
-    {% endblock %}
-  </main>
+    <section class="sign-in">
+        <div class="container">
+            <div class="signin-content">
+                <div class="signin-image">
+                    <figure><img style="{max-width:100px; max-height:100px; width:auto; height:auto; }"
+                                 src="{% static 'images/ml-image.jpg' %}" alt="sing up image"></figure>
+                </div>
+                 <div class="signin-form">
+                    <h2 class="form-title">{% block heading %}  {% endblock %}</h2>
+                    {% block content %}
+
+                     {% endblock %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
 </body>
 </html>
