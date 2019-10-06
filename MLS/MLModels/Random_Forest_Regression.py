@@ -10,7 +10,7 @@ def Random_Forest_Regression(request):
     if request.method == 'POST':
         try:
             file_name = request.POST['filename']
-            my_file = "media_processed/user_{0}/{1}".format(request.user, file_name)
+            my_file = "media/user_{0}/processed_csv/{1}".format(request.user, file_name)
             features = request.POST.getlist('features')
             features_list = []
             for feature in features:

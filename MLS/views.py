@@ -44,7 +44,7 @@ def load_dataset(request):
             newdoc.save()
             file_name = request.FILES['Dataset'].name
             print(file_name)
-            columns, entries, size = read_dataset("media/user_{0}/{1}".format(request.user, file_name))
+            columns, entries, size = read_dataset("media/user_{0}/raw_csv/{1}".format(request.user, file_name))
             return render(request, 'MLS/dataset.html', {'entries': entries,
                                                         'size': size,
                                                         'column': columns,
@@ -55,7 +55,7 @@ def load_dataset(request):
 def preprocessing(request):
     if request.method == 'POST':
         file_name = request.POST['filename']
-        my_file = "media/user_{0}/{1}".format(request.user, file_name)
+        my_file = "media/user_{0}/raw_csv/{1}".format(request.user, file_name)
         df = pd.read_csv(my_file)
         buf = io.StringIO()
         df.info(buf=buf)
@@ -77,9 +77,9 @@ def preprocessing(request):
             if i[3] == 'object':
                 df[i[0]] = label_encoder.fit_transform(df[i[0]])
 
-        if not os.path.exists("media_processed/user_{}".format(request.user)):
-            os.makedirs("media_processed/user_{}".format(request.user))
-        df.to_csv('media_processed/user_{}/{}'.format(request.user, file_name), index=False)
+        if not os.path.exists("media/user_{}/processed_csv".format(request.user)):
+            os.makedirs("media/user_{}/processed_csv".format(request.user))
+        df.to_csv('media/user_{}/processed_csv/{}'.format(request.user, file_name), index=False)
         matrix = df.corr()
         matrix = matrix.round(2).values
         return render(request, 'MLS/preprocess.html', {'columns':columns,
@@ -90,7 +90,7 @@ def correlation(request):
     if request.method == 'POST':
         label = request.POST['label']
         file_name = request.POST['filename']
-        my_file = "media_processed/user_{0}/{1}".format(request.user, file_name)
+        my_file = "media/user_{0}/processed_csv/{1}".format(request.user, file_name)
         df = pd.read_csv(my_file)
 
         corr = df[df.columns[:]].corr()[label][:]
@@ -121,7 +121,7 @@ def modelSelection(request):
         features = request.POST.getlist('features')
         label = request.POST['label']
         file_name = request.POST['filename']
-        my_file = "media_processed/user_{0}/{1}".format(request.user, file_name)
+        my_file = "media/user_{0}/processed_csv/{1}".format(request.user, file_name)
         df = pd.read_csv(my_file)
         u_values = df[label].unique()
         values = df.shape[0]

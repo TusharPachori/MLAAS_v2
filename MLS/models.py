@@ -5,7 +5,7 @@ from django.conf import settings
 
 def user_directory_path(instance, filename):
     # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
-    return 'user_{0}/{1}'.format(instance.user.username, filename)
+    return 'user_{0}/raw_csv/{1}'.format(instance.user.username, filename)
 
 
 class DataSet(models.Model):
