@@ -3,6 +3,8 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import cross_val_score
 from sklearn.neighbors import KNeighborsClassifier
 from .Test_Train import TestTrainSplit
+from sklearn.externals import joblib
+
 import numpy as np
 import os
 
@@ -49,6 +51,10 @@ def Nearest_Neighbor(request):
 
             if request.POST['submit'] == "TRAIN":
                 classifier.fit(X_train, y_train)
+                if not os.path.exists("media/user_{}/trained_model".format(request.user)):
+                    os.makedirs("media/user_{}/trained_model".format(request.user))
+                download_link = "media/user_{0}/trained_model/{1}".format(request.user, 'classifier.pkl')
+                joblib.dump(classifier, download_link)
                 y_pred = classifier.predict(X_test)
                 result = accuracy_score(y_test, y_pred)
 
@@ -56,7 +62,8 @@ def Nearest_Neighbor(request):
 
                 return render(request, 'MLS/result.html', {"model": "Nearest_Neighbor",
                                                            "metrics": "Accuracy Score",
-                                                           "result": result*100})
+                                                           "result": result*100,
+                                                           "link": download_link})
             else:
                 scores = cross_val_score(classifier, X, y, cv=cv, scoring='accuracy')
                 rmse_score = np.sqrt(scores)

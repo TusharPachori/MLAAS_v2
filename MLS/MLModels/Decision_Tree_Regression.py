@@ -6,6 +6,7 @@ from sklearn.model_selection import cross_val_score
 import os
 import numpy as np
 import math
+from sklearn.externals import joblib
 
 
 
@@ -64,6 +65,10 @@ def Decision_Tree_Regression(request):
 
             if request.POST['submit'] == "TRAIN":
                 regressor.fit(X_train, y_train)
+                if not os.path.exists("media/user_{}/trained_model".format(request.user)):
+                    os.makedirs("media/user_{}/trained_model".format(request.user))
+                download_link = "media/user_{0}/trained_model/{1}".format(request.user, 'regressor.pkl')
+                joblib.dump(regressor, download_link)
                 y_pred = regressor.predict(X_test)
                 result = mean_squared_error(y_test, y_pred)
                 result = math.sqrt(result)
@@ -72,7 +77,8 @@ def Decision_Tree_Regression(request):
 
                 return render(request, 'MLS/result.html', {"model": "Decision_Tree_Regression",
                                                            "metrics": "ROOT MEAN SQUARE ROOT",
-                                                           "result": result})
+                                                           "result": result,
+                                                           "link": download_link})
             else:
                 scores = cross_val_score(regressor, X, y, cv=cv, scoring='neg_mean_squared_error')
                 rmse_score = np.sqrt(-scores)
