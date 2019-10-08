@@ -20,7 +20,6 @@
             </tr>
             {% for counter in matrix|entry_num_array %}
             <tr>
-                <td><input type="radio" name="label" value="{{ columns|fir_index:counter}}" required></td>
                 <td>{{ columns|fir_index:counter}}</td>
                 {% for i in matrix|index:counter %}
                 {% if i >= 0.0 %}

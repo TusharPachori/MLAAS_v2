@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from sklearn.metrics import accuracy_score
+from sklearn.model_selection import cross_val_score
 from sklearn.tree import DecisionTreeClassifier
 from .Test_Train import TestTrainSplit
 import os
+import numpy as np
 
 
 def Decision_Trees(request):
@@ -19,8 +21,10 @@ def Decision_Trees(request):
                     features_list.append(i[1:-1])
             label = request.POST['label']
             ratio = request.POST['ratio']
+            cv = int(request.POST['cv'])
 
-            X_train, X_test, y_train, y_test = TestTrainSplit(my_file, features_list, label, int(ratio))
+
+            X, y, X_train, X_test, y_train, y_test = TestTrainSplit(my_file, features_list, label, int(ratio))
 
             criterion = request.POST['criterion']
             splitter = request.POST['splitter']
@@ -62,15 +66,27 @@ def Decision_Trees(request):
                                                 class_weight=class_weight,
                                                 presort=presort)
 
-            classifier.fit(X_train, y_train)
-            y_pred = classifier.predict(X_test)
-            result = accuracy_score(y_test, y_pred)
-            print(result)
+            if request.POST['submit'] == "TRAIN":
+                classifier.fit(X_train, y_train)
+                y_pred = classifier.predict(X_test)
+                result = accuracy_score(y_test, y_pred)
+                print(result)
 
-            return render(request, 'MLS/result.html', {"model": "Decision_Trees",
-                                                       "metrics": "Accuracy Score",
-                                                       "result": result*100})
+                return render(request, 'MLS/result.html', {"model": "Decision_Trees",
+                                                           "metrics": "Accuracy Score",
+                                                           "result": result*100})
+            else:
+                scores = cross_val_score(classifier, X, y, cv=cv, scoring='accuracy')
+                rmse_score = np.sqrt(scores)
+                mean = scores.mean()
+                std = scores.std()
+
+                return render(request, 'MLS/validate.html', {"model": "Decision_Trees",
+                                                             "scoring": "accuracy",
+                                                             "scores": scores,
+                                                             'mean': mean,
+                                                             'std': std,
+                                                             'rmse': rmse_score})
+
         except Exception as e:
-            return render(request, 'MLS/result.html', {"model": "Decision_Trees",
-                                                       "metrics": "Accuracy Score",
-                                                       "Error": e})
+                return render(request, 'MLS/error.html', {"Error": e})

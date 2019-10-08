@@ -1,36 +1,65 @@
-<!DOCTYPE html>
+{% load app_tags %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Dataset</title>
 </head>
 <body>
-    <h2> PREPROCESSING </h2>
+    <h2> LABEL SELECTION </h2>
     <h2> Entries: {{entries}}</h2>
     <h4> DataSet Size: {{size}}</h4>
 
 
     <form  method="post" enctype="multipart/form-data" action="preprocess">
         {% csrf_token %}
+        <div style="width: 100%; overflow-y: scroll; border-style: groove;">
         <table>
             <tr>
-                <th> COLUMNS &nbsp;&nbsp;&nbsp;</th>
+                <th>             </th>
+                <th> COLUMNS &nbsp;&nbsp;&nbsp; </th>
                 <th> DATATYPE &nbsp;&nbsp;&nbsp;</th>
+                <th> MEAN &nbsp;&nbsp;&nbsp;</th>
+                <th> STD &nbsp;&nbsp;&nbsp;</th>
+                <th> MIN &nbsp;&nbsp;&nbsp;</th>
+                <th> 25% &nbsp;&nbsp;&nbsp;</th>
+                <th> 50% &nbsp;&nbsp;&nbsp;</th>
+                <th> 75% &nbsp;&nbsp;&nbsp;</th>
+                <th> MAX &nbsp;&nbsp;&nbsp;</th>
+                <th> UNIQUE &nbsp;&nbsp;&nbsp;</th>
+                <th> TOP &nbsp;&nbsp;&nbsp;</th>
+                <th> FREQUENCY &nbsp;&nbsp;&nbsp;</th>
                 <th> PREPROCESS REQ &nbsp;&nbsp;&nbsp;</th>
                 <th> COMMENTS &nbsp;&nbsp;&nbsp;</th>
             </tr>
             {% for i in column %}
             <tr>
+                <td>&nbsp;&nbsp;&nbsp;<input type="radio" name="label" value="{{ i.0 }}" required> &nbsp;&nbsp;&nbsp;</td>&nbsp;
                 <td>&nbsp;&nbsp;&nbsp;{{i.0}} &nbsp;&nbsp;&nbsp;</td>&nbsp;
                 <td>&nbsp;&nbsp;&nbsp;{{i.3}}&nbsp;&nbsp;&nbsp;</td>
+                <td>&nbsp;&nbsp;&nbsp;{{i.5}}&nbsp;&nbsp;&nbsp;</td>
+                <td>&nbsp;&nbsp;&nbsp;{{i.6}}&nbsp;&nbsp;&nbsp;</td>
+                <td>&nbsp;&nbsp;&nbsp;{{i.7}}&nbsp;&nbsp;&nbsp;</td>
+                <td>&nbsp;&nbsp;&nbsp;{{i.8}}&nbsp;&nbsp;&nbsp;</td>
+                <td>&nbsp;&nbsp;&nbsp;{{i.9}}&nbsp;&nbsp;&nbsp;</td>
+                <td>&nbsp;&nbsp;&nbsp;{{i.10}}&nbsp;&nbsp;&nbsp;</td>
+                <td>&nbsp;&nbsp;&nbsp;{{i.11}}&nbsp;&nbsp;&nbsp;</td>
+                <td>&nbsp;&nbsp;&nbsp;{{i.12}}&nbsp;&nbsp;&nbsp;</td>
+                <td>&nbsp;&nbsp;&nbsp;{{i.13}}&nbsp;&nbsp;&nbsp;</td>
+                <td>&nbsp;&nbsp;&nbsp;{{i.14}}&nbsp;&nbsp;&nbsp;</td>
+
+
                 <td>&nbsp;&nbsp;&nbsp;{% if i.4 == 1 or i.3 == 'object' %} YES {% else %} NO {% endif %}&nbsp;&nbsp;&nbsp;</td>
                 <td>&nbsp;&nbsp;&nbsp;{% if i.4 == 1 and i.3 == 'object' %} Contains Nan values/Contains String Values
                     {% elif i.4 == 1 %} Contains Nan values {% elif i.3 == 'object' %} Contains String Values {% endif %}&nbsp;&nbsp;&nbsp;</td>
             </tr>
             {% endfor %}
+            <tr></tr>
+            <tr>
+                <td></td>
+                <td><input type="hidden" name="filename" value="{{ filename }}"><button type="submit">SELECT & PREPROCESS</button></td>
+            </tr>
         </table>
-        <input type="hidden" name="filename" value="{{ filename }}">
-        <button type="submit">PREPROCESS</button>
+        </div>
     </form>
 </body>
 </html>

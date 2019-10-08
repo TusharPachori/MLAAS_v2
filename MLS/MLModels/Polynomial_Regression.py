@@ -19,8 +19,10 @@ def Polynomial_Regression(request):
                     features_list.append(i[1:-1])
             label = request.POST['label']
             ratio = request.POST['ratio']
+            cv = int(request.POST['cv'])
 
-            X_train, X_test, y_train, y_test = TestTrainSplit(my_file, features_list, label, int(ratio))
+
+            X, y, X_train, X_test, y_train, y_test = TestTrainSplit(my_file, features_list, label, int(ratio))
 
             degree = int(request.POST['degree'])
             interaction_only = True if request.POST['interaction_only'] == "True" else False
@@ -35,5 +37,6 @@ def Polynomial_Regression(request):
                                           order=order)
 
             return render(request, 'MLS/result.html', {"model": "Polynomial_Regression"})
+
         except Exception as e:
-            return render(request, 'MLS/result.html', {"model": "Polynomial_Regression"})
+            return render(request, 'MLS/error.html', {"Error": e})

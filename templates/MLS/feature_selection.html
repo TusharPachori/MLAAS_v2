@@ -18,7 +18,11 @@
             {% for row in columns|entry_num_array %}
             <tr>
                 {% if  columns|index:row  != label  %}
-                    <td><input type="checkbox" name="features" value="{{ columns|index:row }}"></td>
+                    {% if comment|index:row >= 3%}
+                        <td><input type="checkbox" name="features" value="{{ columns|index:row }}" checked></td>
+                    {% else %}
+                        <td><input type="checkbox" name="features" value="{{ columns|index:row }}"></td>
+                    {% endif%}
                 {% else %}
                     <td></td>
                 {% endif %}

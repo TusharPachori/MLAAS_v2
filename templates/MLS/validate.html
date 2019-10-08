@@ -2,9 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>Result</title>
 </head>
 <body>
-$END$
+
+<h1>MODEL: {{ model }}</h1>
+<h1>Validation Scoring: {{ scoring }}</h1>
+<h2>Scores:  {{ scores }}</h2>
+<h2>Root Mean Square Error:  {{ rmse }}</h2>
+<h2>Mean:  {{ mean }}</h2>
+<h2>Standard deviation:  {{ std }}</h2>
+
+<input type=button value="Fine-Tune HyperParameter" onClick="javascript:history.go(-1);">
+<!--<form method="post" enctype="multipart/form-data" action="{{ model }}">-->
+<!--    {% csrf_token %}-->
+<!--    <input type="submit" value="Train">-->
+<!--</form>-->
 </body>
 </html>

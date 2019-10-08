@@ -1,9 +1,11 @@
 import os
-
+import math
 from django.shortcuts import render, redirect
 from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import cross_val_score
 from sklearn.svm import SVR
 from .Test_Train import TestTrainSplit
+import numpy as np
 
 
 def Support_Vector_Regression(request):
@@ -20,8 +22,10 @@ def Support_Vector_Regression(request):
                     features_list.append(i[1:-1])
             label = request.POST['label']
             ratio = request.POST['ratio']
+            cv = int(request.POST['cv'])
 
-            X_train, X_test, y_train, y_test = TestTrainSplit(my_file, features_list, label, int(ratio))
+
+            X, y, X_train, X_test, y_train, y_test = TestTrainSplit(my_file, features_list, label, int(ratio))
 
             kernel = request.POST['kernel']
             degree = int(request.POST['degree'])
@@ -49,15 +53,30 @@ def Support_Vector_Regression(request):
                             verbose=verbose,
                             max_iter=max_iter,)
 
-            regressor.fit(X_train, y_train)
-            y_pred = regressor.predict(X_test)
-            result = mean_squared_error(y_test, y_pred)
-            print(result)
+            if request.POST['submit'] == "TRAIN":
+                regressor.fit(X_train, y_train)
+                y_pred = regressor.predict(X_test)
+                result = mean_squared_error(y_test, y_pred)
+                result = math.sqrt(result)
+                result = round(result, 2)
 
-            return render(request, 'MLS/result.html', {"model": "Support_Vector_Regression",
-                                                       "metrics": "MEAN SQUARE ROOT",
-                                                       "result": result})
+                print(result)
+
+                return render(request, 'MLS/result.html', {"model": "Support_Vector_Regression",
+                                                           "metrics": "ROOT MEAN SQUARE ROOT",
+                                                           "result": result})
+            else:
+                scores = cross_val_score(regressor, X, y, cv=cv, scoring='neg_mean_squared_error')
+                rmse_score = np.sqrt(-scores)
+                mean = scores.mean()
+                std = scores.std()
+
+
+                return render(request, 'MLS/validate.html', {"model": "Support_Vector_Regression",
+                                                             "scoring": "neg_mean_squared_error",
+                                                             "scores": scores,
+                                                             'mean': mean,
+                                                             'std': std,
+                                                             'rmse': rmse_score})
         except Exception as e:
-            return render(request, 'MLS/result.html', {"model": "Support_Vector_Regression",
-                                                       "metrics": "MEAN SQUARE ROOT",
-                                                       "Error": e})
+            return render(request, 'MLS/error.html', {"Error": e})

@@ -2,6 +2,9 @@ import os
 from django.shortcuts import render, redirect
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_squared_error
+import math
+import numpy as np
+from sklearn.model_selection import cross_val_score
 
 from .Test_Train import TestTrainSplit
 
@@ -20,8 +23,10 @@ def Random_Forest_Regression(request):
                     features_list.append(i[1:-1])
             label = request.POST['label']
             ratio = request.POST['ratio']
+            cv = int(request.POST['cv'])
 
-            X_train, X_test, y_train, y_test = TestTrainSplit(my_file, features_list, label, int(ratio))
+
+            X, y, X_train, X_test, y_train, y_test = TestTrainSplit(my_file, features_list, label, int(ratio))
 
             n_estimators = int(request.POST['n_estimators'])
             criterion = request.POST['criterion']
@@ -71,15 +76,30 @@ def Random_Forest_Regression(request):
                                               verbose=verbose,
                                               warm_start=warm_start)
 
-            regressor.fit(X_train, y_train)
-            y_pred = regressor.predict(X_test)
-            result = mean_squared_error(y_test, y_pred)
-            print(result)
+            if request.POST['submit'] == "TRAIN":
 
-            return render(request, 'MLS/result.html', {"model": "Random_Forest_Regression",
-                                                       "metrics": "MEAN SQUARE ROOT",
-                                                       "result": result})
+                regressor.fit(X_train, y_train)
+                y_pred = regressor.predict(X_test)
+                result = mean_squared_error(y_test, y_pred)
+                result = math.sqrt(result)
+                result = round(result, 2)
+
+                print(result)
+
+                return render(request, 'MLS/result.html', {"model": "Random_Forest_Regression",
+                                                           "metrics": "ROOT MEAN SQUARE ROOT",
+                                                           "result": result})
+            else:
+                scores = cross_val_score(regressor, X, y, cv=cv, scoring='neg_mean_squared_error')
+                rmse_score = np.sqrt(-scores)
+                mean = scores.mean()
+                std = scores.std()
+
+                return render(request, 'MLS/validate.html', {"model": "Random_Forest_Regression",
+                                                             "scoring": "neg_mean_squared_error",
+                                                             "scores": scores,
+                                                             'mean': mean,
+                                                             'std': std,
+                                                             'rmse': rmse_score})
         except Exception as e:
-            return render(request, 'MLS/result.html', {"model": "Random_Forest_Regression",
-                                                       "metrics": "MEAN SQUARE ROOT",
-                                                       "Error": e})
+            return render(request, 'MLS/error.html', {"Error": e})

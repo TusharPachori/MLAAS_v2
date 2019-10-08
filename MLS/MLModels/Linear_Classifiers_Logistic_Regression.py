@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
-
+from sklearn.model_selection import cross_val_score
+import numpy as np
 from .Test_Train import TestTrainSplit
 import os
 
@@ -20,8 +21,10 @@ def Linear_Classifiers_Logistic_Regression(request):
                     features_list.append(i[1:-1])
             label = request.POST['label']
             ratio = request.POST['ratio']
+            cv = int(request.POST['cv'])
 
-            X_train, X_test, y_train, y_test = TestTrainSplit(my_file, features_list, label, int(ratio))
+
+            X, y, X_train, X_test, y_train, y_test = TestTrainSplit(my_file, features_list, label, int(ratio))
 
             penalty = request.POST['penalty']
             dual = True if request.POST['dual'] == "True" else False
@@ -61,14 +64,25 @@ def Linear_Classifiers_Logistic_Regression(request):
                                             warm_start=warm_start,
                                             n_jobs=n_jobs,
                                             l1_ratio=l1_ratio)
-            classifier.fit(X_train, y_train)
-            y_pred = classifier.predict(X_test)
-            result = accuracy_score(y_test, y_pred)
-            print(result)
-            return render(request, 'MLS/result.html', {"model": "Linear_Classifiers_Logistic_Regression",
-                                                       "metrics": "Accuracy Score",
-                                                       "result": result*100})
+            if request.POST['submit'] == "TRAIN":
+                classifier.fit(X_train, y_train)
+                y_pred = classifier.predict(X_test)
+                result = accuracy_score(y_test, y_pred)
+                print(result)
+                return render(request, 'MLS/result.html', {"model": "Linear_Classifiers_Logistic_Regression",
+                                                           "metrics": "Accuracy Score",
+                                                           "result": result*100})
+            else:
+                scores = cross_val_score(classifier, X, y, cv=cv, scoring='accuracy')
+                rmse_score = np.sqrt(scores)
+                mean = scores.mean()
+                std = scores.std()
+
+                return render(request, 'MLS/validate.html', {"model": "Linear_Classifiers_Logistic_Regression",
+                                                             "scoring": "accuracy",
+                                                             "scores": scores,
+                                                             'mean': mean,
+                                                             'std': std,
+                                                             'rmse': rmse_score})
         except Exception as e:
-            return render(request, 'MLS/result.html', {"model": "Linear_Classifiers_Logistic_Regression",
-                                                       "metrics": "Accuracy Score",
-                                                       "Error": e})
+            return render(request, 'MLS/error.html', {"Error": e})
