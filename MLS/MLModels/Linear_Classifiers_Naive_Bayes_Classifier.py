@@ -1,11 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from sklearn.model_selection import cross_val_score
 from sklearn.naive_bayes import GaussianNB
 from .Test_Train import TestTrainSplit
 from sklearn.metrics import accuracy_score
-from sklearn.externals import joblib
+import joblib
 
-import  numpy as np
+import numpy as np
 import os
 
 
@@ -28,11 +28,7 @@ def Linear_Classifiers_Naive_Bayes_Classifier(request):
             X, y, X_train, X_test, y_train, y_test = TestTrainSplit(my_file, features_list, label, int(ratio))
 
             priors = None if request.POST['priors']=="None" else request.POST['priors']
-
-            # priors= request.POST.getlist('priors')
             var_smoothing= float(request.POST['var_smoothing'])
-
-            # priors = [float(i) for i in priors]
 
             classifier = GaussianNB(priors=priors, var_smoothing=var_smoothing)
 
@@ -49,18 +45,23 @@ def Linear_Classifiers_Naive_Bayes_Classifier(request):
                                                            "metrics": "Accuracy Score",
                                                            "result": result*100,
                                                            "link": download_link})
-            else:
+
+            elif request.POST['submit'] == "VALIDATE":
                 scores = cross_val_score(classifier, X, y, cv=cv, scoring='accuracy')
                 rmse_score = np.sqrt(scores)
-                mean = scores.mean()
-                std = scores.std()
+                rmse_score = np.round(rmse_score, 3)
+                mean = np.round(scores.mean(), 3)
+                std = np.round(scores.std(), 3)
+                scores = np.round(scores, 3)
 
                 return render(request, 'MLS/validate.html', {"model": "Linear_Classifiers_Naive_Bayes_Classifier",
                                                              "scoring": "accuracy",
                                                              "scores": scores,
                                                              'mean': mean,
                                                              'std': std,
-                                                             'rmse': rmse_score})
+                                                             'rmse': rmse_score,
+                                                             'cv': range(cv),
+                                                             'cv_list': range(1, cv+1)})
 
         except Exception as e:
             return render(request, 'MLS/error.html', {"Error": e})

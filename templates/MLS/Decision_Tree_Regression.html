@@ -126,13 +126,14 @@
                     <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         TRAIN/TEST RATIO :: <input type="text" name="ratio" value="20">%</h4>
                     <h4>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        CV :: <input type="number" name="cv" min="2" max="50" step="1" value="10">%</h4>
+                        Cross-Validation folds :: <input type="number" name="cv" min="2" max="50" step="1" value="10"></h4>
                 </div>
                 <input type="hidden" name="features" value="{{ features }}">
                 <input type="hidden" name="label" value="{{ label }}">
                 <input type="hidden" name="filename" value="{{ filename }}">
                 <button value="VALIDATE" type="submit" name="submit">VALIDATE</button>
                 <button value="TRAIN" type="submit" name="submit">TRAIN</button>
+                <button value="RandomSearch" type="submit" name="submit">Random Search</button>
             </form>
         </div>
     </div>

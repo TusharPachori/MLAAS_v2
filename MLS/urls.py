@@ -10,7 +10,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('label_selection', views.load_dataset, name='load_dataset'),
     path('preprocess', views.preprocessing, name='preprocess'),
-    # path('correlation', views.correlation, name='correlation'),
     path('modelSelection', views.modelSelection, name='modelSelection'),
     path('hyperParam', views.hyperParam, name='hyperParam'),
     path('Linear_Classifiers_Logistic_Regression', views.Linear_Classifiers_Logistic_Regression,

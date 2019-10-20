@@ -9,7 +9,7 @@
   <p><a href="{% url 'password_reset' %}">reset password</a></p>
   <form method="post" action="{% url 'index' %}">
       {% csrf_token %}
-    <h1><input type="submit" value="Use Automated Machine Learning Service" /></h1>
+    <h1><button type="submit">Use Automated Machine Learning Service</button></h1>
 </form>
 {% else %}
 <p><h1>MLaaS</h1></p>

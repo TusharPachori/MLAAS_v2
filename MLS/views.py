@@ -10,9 +10,7 @@ import os
 from sklearn.base import TransformerMixin
 
 
-
 class DataFrameImputer(TransformerMixin):
-
     def __init__(self):
         pass
 
@@ -56,11 +54,17 @@ def load_dataset(request):
                         i.append(1)
                     else:
                         i.append(0)
-                    if i[-2] != 'object':
+                    if i[-2] == 'float64':
                         x = df[i[0]].describe()
                         x = x.values
                         for j in range(1, len(x)):
                             i.append(x[j].round(2))
+                        i.extend([0]*3)
+                    elif i[-2] == 'int64':
+                        x = df[i[0]].describe()
+                        x = x.values
+                        for j in range(1, len(x)):
+                            i.append(x[j])
                         i.extend([0]*3)
                     else:
                         i.extend([0] * 7)
@@ -144,38 +148,6 @@ def preprocessing(request):
         return redirect("home")
 
 
-# def correlation(request):
-#     if request.method == 'POST':
-#         label = request.POST['label']
-#         file_name = request.POST['filename']
-#         my_file = "media/user_{0}/processed_csv/{1}".format(request.user, file_name)
-#         df = pd.read_csv(my_file)
-#
-#         corr = df[df.columns[:]].corr()[label][:]
-#         corr = corr.round(2).values
-#         columns = []
-#         for col in df.columns:
-#             columns.append(col)
-#         comment = []
-#         for i in corr:
-#             if i>=0.6:
-#                 comment.append(5)
-#             elif i>=0.2:
-#                 comment.append(4)
-#             elif i>0.0:
-#                 comment.append(3)
-#             else:
-#                 comment.append(0)
-#
-#         return render(request, 'MLS/feature_selection.html', {'comment': comment,
-#                                                               'columns': columns,
-#                                                               'corr': corr,
-#                                                               'label': label,
-#                                                               'filename':file_name})
-#     else:
-#         return redirect("home")
-
-
 def modelSelection(request):
     if request.method == 'POST':
         try:
@@ -221,5 +193,4 @@ def hyperParam(request):
             return render(request, 'MLS/error.html', {"Error": e})
     else:
         return redirect("home")
-
 

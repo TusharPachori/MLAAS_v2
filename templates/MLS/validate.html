@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+{% load app_tags %}
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,9 +8,22 @@
 <body>
 
 <h1>MODEL: {{ model }}</h1>
+<h1>Cross Valiation Stats</h1>
 <h1>Validation Scoring: {{ scoring }}</h1>
-<h2>Scores:  {{ scores }}</h2>
-<h2>Root Mean Square Error:  {{ rmse }}</h2>
+<table>
+    <tr>
+        <th>CV Step &nbsp;&nbsp;&nbsp;</th>
+        <th>Score &nbsp;&nbsp;&nbsp;</th>
+        <th>RMSE &nbsp;&nbsp;&nbsp;</th>
+    </tr>
+    {% for i in cv|entry_num_array %}
+    <tr>
+        <td>{{ cv_list|index:i }}</td>
+        <td>{{ scores|index:i }}</td>
+        <td>{{ rmse|index:i }}</td>
+    </tr>
+    {% endfor %}
+</table>
 <h2>Mean:  {{ mean }}</h2>
 <h2>Standard deviation:  {{ std }}</h2>
 
